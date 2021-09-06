@@ -12,6 +12,7 @@ const allowedOrigins = ["http://127.0.0.1:8000", "http://127.0.0.1:8080", "https
 // Endpoints
 router.route("/get_playlist").get(get_playlist);
 router.route("/get_audio").get(get_audio);
+router.route("/get_infos").get(get_infos);
 router.route("/get_search_results").get(get_search_results);
 router.route("/get_refinements").get(get_refinements);
 
@@ -172,7 +173,7 @@ async function get_search_results(req, resp) {
                     if (item.videoRenderer.ownerBadges[0].metadataBadgeRenderer.icon.iconType == "OFFICIAL_ARTIST_BADGE")
                         results.push({
                             title: item.videoRenderer.title.runs[0].text,
-                            thumbnail: item.videoRenderer.thumbnail.thumbnails[0].url,
+                            thumbnail: item.videoRenderer.thumbnail.thumbnails[1].url,
                             id: item.videoRenderer.videoId,
                             duration: item.videoRenderer.lengthText.simpleText,
                             artist: item.videoRenderer.ownerText.runs[0].text,
@@ -185,14 +186,20 @@ async function get_search_results(req, resp) {
     resp.json(results);
 }
 
-function getDuration(duration) {
-    let times = duration.split(":");
-
-    if (times.length == 2) {
-        return Number(times[0]) * 60 + Number(times[1]);
-    } else {
-        return 9999;
+async function get_infos(req, resp) {
+    const origin = req.headers.origin;
+    if (allowedOrigins.includes(origin)) {
+        resp.setHeader("Access-Control-Allow-Origin", origin);
     }
+    resp.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
+    resp.setHeader("Access-Control-Allow-Headers", "X-Requested-With,content-type");
+    resp.setHeader("Access-Control-Allow-Credentials", true);
+    let id = decodeURI(req.query.id);
+    let url = "https://www.youtube.com/watch?v=" + id;
+
+    let info = await ytdl.getInfo(id);
+
+    console.log({ title: info.videoDetails.title, artist: info.videoDetails.ownerChannelName, id: id, thumbnail: info.videoDetails.thumbnails[info.videoDetails.thumbnails.length - 1].url, duration: Math.floor(info.videoDetails.lengthSeconds/60)+':'+info.videoDetails.lengthSeconds%60 });
 }
 
 module.exports = router;
