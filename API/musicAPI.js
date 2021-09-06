@@ -199,7 +199,7 @@ async function get_infos(req, resp) {
 
     let info = await ytdl.getInfo(id);
 
-    console.log({ title: info.videoDetails.title, artist: info.videoDetails.ownerChannelName, id: id, thumbnail: info.videoDetails.thumbnails[info.videoDetails.thumbnails.length - 1].url, duration: Math.floor(info.videoDetails.lengthSeconds/60)+':'+info.videoDetails.lengthSeconds%60 });
+    resp.json({ title: info.videoDetails.title, artist: info.videoDetails.ownerChannelName, id: id, thumbnail: info.videoDetails.thumbnails[info.videoDetails.thumbnails.length - 1].url, duration: Math.floor(info.videoDetails.lengthSeconds/60)+':'+info.videoDetails.lengthSeconds%60 });
 }
 
 module.exports = router;
