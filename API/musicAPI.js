@@ -199,7 +199,23 @@ async function get_infos(req, resp) {
 
     let info = await ytdl.getInfo(id);
 
-    resp.json({ title: info.videoDetails.title, artist: info.videoDetails.ownerChannelName, id: id, thumbnail: info.videoDetails.thumbnails[info.videoDetails.thumbnails.length - 1].url, duration: Math.floor(info.videoDetails.lengthSeconds/60)+':'+info.videoDetails.lengthSeconds%60 });
+    let suggestions = info.related_videos.slice(0, 10);
+
+    let info2 = await ytdl.getInfo(id);
+
+    let format = ytdl.chooseFormat(info2.formats, { quality: "highestaudio" });
+    let size = format.contentLength;
+
+    console.log(suggestions)
+
+    resp.json({
+        title: info.videoDetails.title,
+        artist: info.videoDetails.ownerChannelName,
+        id: id,
+        thumbnail: info.videoDetails.thumbnails[info.videoDetails.thumbnails.length - 1].url,
+        duration: Math.floor(info.videoDetails.lengthSeconds / 60) + ":" + (info.videoDetails.lengthSeconds % 60),
+        streamable: size ? true : false,
+    });
 }
 
 module.exports = router;
