@@ -206,7 +206,7 @@ async function get_infos(req, resp) {
     let format = ytdl.chooseFormat(info2.formats, { quality: "highestaudio" });
     let size = format.contentLength;
 
-    console.log(suggestions)
+    console.log(suggestions);
 
     resp.json({
         title: info.videoDetails.title,
@@ -215,6 +215,7 @@ async function get_infos(req, resp) {
         thumbnail: info.videoDetails.thumbnails[info.videoDetails.thumbnails.length - 1].url,
         duration: Math.floor(info.videoDetails.lengthSeconds / 60) + ":" + (info.videoDetails.lengthSeconds % 60),
         streamable: size ? true : false,
+        suggestions: suggestions.slice(0, 10),
     });
 }
 
