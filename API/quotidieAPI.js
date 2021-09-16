@@ -89,7 +89,7 @@ function get_saint_promise() {
                 console.log($(".css-1tmjk0q")["0"]);
                 let saint = {};
                 saint.title = $(".css-18agi3i")["0"].children[0].data;
-                saint.subtitle = $(".css-ygkx0p")["0"].children[0].data;
+                saint.subtitle = $(".css-ygkx0p")["0"].children[0] != undefined ? $(".css-ygkx0p")["0"].children[0].data : "";
                 saint.image_url = $(".css-7rn6ci")["0"].attribs.src;
                 resolve(saint);
             })
