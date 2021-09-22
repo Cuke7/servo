@@ -1,7 +1,3 @@
-const express = require("express");
-
-const app = express();
-
 var express = require("express");
 var router = express.Router();
 
@@ -234,8 +230,6 @@ function fulfillment(req, res) {
     }
 }
 
-app.listen(process.env.PORT || 8080);
-
 function checkForCustomContext(contextParameters) {
     let flag = false;
     for (const context of contextParameters) {
@@ -253,3 +247,5 @@ function getContextParameters(contextParameters) {
         }
     }
 }
+
+module.exports = router;
