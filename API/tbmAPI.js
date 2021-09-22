@@ -110,13 +110,16 @@ function fulfillment(req, res) {
 
                                     let regex2 = /[A-Z].* /;
 
-                                    //console.log(direction);
+                                    console.log(direction);
 
                                     let lineID = direction.route.line.name.split(regex2)[1];
+                                    if (!isNaN(lineID) && lineID.length == 1) {
+                                        lineID = "0" + lineID;
+                                    }
 
                                     //console.log("Stop : " + stopID + ", line : " + lineID);
 
-                                    //console.log("https://ws.infotbm.com/ws/1.0/get-realtime-pass/" + stopID + "/" + lineID);
+                                    console.log("https://ws.infotbm.com/ws/1.0/get-realtime-pass/" + stopID + "/" + lineID);
 
                                     results.push({
                                         direction: direction.route.name,
