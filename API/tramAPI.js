@@ -11,8 +11,37 @@ const allowedOrigins = ["http://127.0.0.1:8000", "http://127.0.0.1:8080", "https
 
 // Endpoints
 router.route("/get_station_times").get(get_station_times);
+router.route("/get_stop").get(get_stop);
 
-// Get playlist object from playlist url
+async function get_stop(req, res) {
+    // Allow CORS stuff
+    const origin = req.headers.origin;
+    if (allowedOrigins.includes(origin)) {
+        res.setHeader("Access-Control-Allow-Origin", origin);
+    }
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
+    res.setHeader("Access-Control-Allow-Headers", "X-Requested-With,content-type");
+    res.setHeader("Access-Control-Allow-Credentials", true);
+
+    var station = req.query.station;
+
+    const browser = await puppeteer.launch({
+        headless: false,
+        args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    });
+
+    const page = await browser.newPage();
+    await page.goto("https://www.infotbm.com/fr/horaires/");
+    await page.click('[placeholder="Chercher un arrêt, une ligne"]');
+    await page.type('input[placeholder="Chercher un arrêt, une ligne"]', station, { delay: 200 });
+
+    const inner_html = await page.evaluate(() => document.querySelector("#react-autowhatever-1").innerHTML);
+
+    console.log(inner_html);
+
+    //await browser.close();
+}
+
 async function get_station_times(req, res) {
     // Allow CORS stuff
     const origin = req.headers.origin;
